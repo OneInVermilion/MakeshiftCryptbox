@@ -30,7 +30,7 @@ public class SteganographyPanel extends CustomPanel {
 		btnT2T.setBounds(170, 112, 120, 60);
 		add(btnT2T);
 		
-		JButton btnT2I = new JButton("Text to Image");
+		JButton btnT2I = new JButton("Text to Image LSB");
 		btnT2I.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				requestSwitchPanel(new Text2ImagePanel());

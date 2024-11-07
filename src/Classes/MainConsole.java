@@ -12,21 +12,25 @@ public class MainConsole {
 	
 	/*
 	Message length for reading
-	change 4 cycles of inserting colors into 2 cycles, one inside the other, working with the single string of all 4 channels 
+	OR
+	encode message length as well
+	then make it max 256 and code the length in 1 symbol at the start
+	
+	read
+	only the involved bits
+	from right to left in terms of each pixel's colors binvalue
+	up until the length expires
 	*/
 	
 	
 	public static void main(String[] args) {
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(new File("C:/Users/ermak/Documents/python idle saves/steganography/test.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// C:/Users/ermak/Documents/fileProgrammingTests
+		// test.png
+		String[] arr = "test.png".split("/");
+		for (int i = 0; i < arr.length; i++) {
+			print(arr[i]);
 		}
-
-		//print(img);
-		print(Steganographer.lsbHide(img, "abc", 0, 1, 1, true, true, true, false));
+		
 	}
 	
 	public static void print(Object text) {
