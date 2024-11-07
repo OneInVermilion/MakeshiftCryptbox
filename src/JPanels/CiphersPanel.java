@@ -37,6 +37,12 @@ public class CiphersPanel extends CustomPanel {
 	public CiphersPanel() {
 		setLayout(null);
 		
+		JLabel lblConsole = new JLabel("Hold Cursor Over Buttons To Gain Information");
+		lblConsole.setVerticalAlignment(SwingConstants.BOTTOM);
+		lblConsole.setHorizontalAlignment(SwingConstants.LEFT);
+		lblConsole.setBounds(30, 226, 520, 88);
+		add(lblConsole);
+		
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

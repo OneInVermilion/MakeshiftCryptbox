@@ -26,11 +26,6 @@ public class MainConsole {
 	public static void main(String[] args) {
 		// C:/Users/ermak/Documents/fileProgrammingTests
 		// test.png
-		String[] arr = "test.png".split("/");
-		for (int i = 0; i < arr.length; i++) {
-			print(arr[i]);
-		}
-		
 	}
 	
 	public static void print(Object text) {
