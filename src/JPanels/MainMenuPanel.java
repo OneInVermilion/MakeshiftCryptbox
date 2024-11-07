@@ -25,6 +25,7 @@ public class MainMenuPanel extends CustomPanel {
 		JButton btnSteganography = new JButton("Steganography");
 		btnSteganography.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				requestSwitchPanel(new SteganographyPanel());
 			}
 		});
 		btnSteganography.setBounds(170, 112, 120, 60);
