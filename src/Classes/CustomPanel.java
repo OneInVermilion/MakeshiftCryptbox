@@ -1,6 +1,7 @@
 package Classes;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import JFrames.MainFrame;
@@ -24,6 +25,16 @@ public class CustomPanel extends JPanel {
 	
 	public void requestSwitchPanel(JPanel pan) {
 		MainFrame parent = (MainFrame) SwingUtilities.getWindowAncestor(me);
-			parent.switchPanel(pan);
+		parent.switchPanel(pan);
+	}
+	public void requestSwitchPanel(JPanel pan, JPanel pan2) {
+		MainFrame parent = (MainFrame) SwingUtilities.getWindowAncestor(me);
+		parent.switchPanel(pan);
+		parent.addPanel(pan2);
+	}
+	public void requestSwitchPanel(JPanel pan, JScrollPane pan2) {
+		MainFrame parent = (MainFrame) SwingUtilities.getWindowAncestor(me);
+		parent.switchPanel(pan);
+		parent.addPanel(pan2);
 	}
 }

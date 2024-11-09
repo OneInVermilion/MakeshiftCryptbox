@@ -41,10 +41,20 @@ public class MainMenuPanel extends CustomPanel {
 		add(btnCiphers);
 		
 		JButton btnMetadata = new JButton("Metadata");
+		btnMetadata.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//requestSwitchPanel(new HexEditorPanel());
+			}
+		});
 		btnMetadata.setBounds(170, 172, 120, 60);
 		add(btnMetadata);
 		
 		JButton btnHexEditor = new JButton("Hex Editor");
+		btnHexEditor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				requestSwitchPanel(new HexEditorPanel(), new HexInfoPanel().scroll);
+			}
+		});
 		btnHexEditor.setBounds(290, 172, 120, 60);
 		add(btnHexEditor);
 
