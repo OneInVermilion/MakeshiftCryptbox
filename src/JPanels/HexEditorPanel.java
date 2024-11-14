@@ -46,6 +46,7 @@ public class HexEditorPanel extends CustomPanel {
 	private byte[] fileBytes;
 	private byte byteBeingEdited;
 	private String loadedFilePath;
+	private JTextField textOutput;
 	
 
 	/**
@@ -66,7 +67,7 @@ public class HexEditorPanel extends CustomPanel {
 		
 		textInput = new JTextField();
 		textInput.setToolTipText("Example.png");
-		textInput.setBounds(380, 90, 170, 30);
+		textInput.setBounds(380, 80, 170, 30);
 		add(textInput);
 		textInput.setColumns(10);
 		
@@ -74,7 +75,7 @@ public class HexEditorPanel extends CustomPanel {
 		
 		JLabel lblInputPath = new JLabel("Input File Name");
 		lblInputPath.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblInputPath.setBounds(450, 70, 100, 13);
+		lblInputPath.setBounds(450, 67, 100, 13);
 		add(lblInputPath);
 		
 		textFolderPath = new JTextField();
@@ -94,31 +95,17 @@ public class HexEditorPanel extends CustomPanel {
 				loadHexInfoPanel();
 			}
 		});
-		btnLoad.setBounds(470, 130, 80, 30);
+		btnLoad.setBounds(470, 170, 80, 30);
 		add(btnLoad);
 		
-		JButton btnSave1 = new JButton("Save");
-		btnSave1.addActionListener(new ActionListener() {
+		JButton btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveFile(loadedFilePath);
+				saveFile(textFolderPath.getText() + "/" + textOutput.getText());
 			}
 		});
-		btnSave1.setBounds(380, 130, 80, 30);
-		add(btnSave1);
-		
-		JButton btnSave2 = new JButton("Save As New File");
-		btnSave2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int formatPosition = 0; //where the format in the filename begins
-				for (int i = loadedFilePath.length() - 1; i >= 0; i--) {
-					if (loadedFilePath.charAt(i) == '.') {formatPosition = i; break;}
-				}
-				String newName = loadedFilePath.substring(0, formatPosition) + "_hexEdited" + loadedFilePath.substring(formatPosition);
-				saveFile(newName);
-			}
-		});
-		btnSave2.setBounds(380, 170, 170, 30);
-		add(btnSave2);
+		btnSave.setBounds(380, 170, 80, 30);
+		add(btnSave);
 		
 		textIntSigned = new JTextField();
 		textIntSigned.setEditable(false);
@@ -255,6 +242,17 @@ public class HexEditorPanel extends CustomPanel {
 		lblConsole.setHorizontalAlignment(SwingConstants.LEFT);
 		lblConsole.setBounds(100, 325, 380, 30);
 		add(lblConsole);
+		
+		textOutput = new JTextField();
+		textOutput.setToolTipText("Example.png");
+		textOutput.setColumns(10);
+		textOutput.setBounds(380, 130, 170, 30);
+		add(textOutput);
+		
+		JLabel lblOutputPath = new JLabel("Output File Name");
+		lblOutputPath.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblOutputPath.setBounds(450, 117, 100, 13);
+		add(lblOutputPath);
 
 	}
 	

@@ -16,7 +16,7 @@ public class MainConsole {
 	*/
 	
 	public static void main(String[] args) throws IOException {
-		//C:/Users/ermak/Documents/fileProgrammingTests
+		
 	}
 	
 	

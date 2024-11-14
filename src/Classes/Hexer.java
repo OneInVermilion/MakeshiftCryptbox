@@ -19,12 +19,11 @@ public class Hexer {
 		input = new FileInputStream(new String(path));
 		byte[] b = input.readAllBytes();
 		input.close();
-		
 		return b;
 	}
 	
 	public static void createFile(String path, byte[] data) throws IOException {
-		//path = formatPath(path);
+		path = formatPath(path);
 		FileOutputStream output = null;
 		output = new FileOutputStream(new String(path));
 		output.write(data);

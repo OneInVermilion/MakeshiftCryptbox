@@ -57,6 +57,15 @@ public class MainMenuPanel extends CustomPanel {
 		});
 		btnHexEditor.setBounds(290, 172, 120, 60);
 		add(btnHexEditor);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		btnExit.setBounds(240, 275, 100, 30);
+		add(btnExit);
 
 	}
 }
