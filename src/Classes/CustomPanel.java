@@ -37,4 +37,9 @@ public class CustomPanel extends JPanel {
 		parent.switchPanel(pan);
 		parent.addPanel(pan2);
 	}
+	public void updPanel(byte[] bytes, boolean showAsSymbols) {}
+
+	public void clearPanel() {}
+
+	public void updByteFields(byte selectedByte) {}
 }

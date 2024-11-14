@@ -6,6 +6,7 @@ import javax.swing.SwingUtilities;
 import Classes.CustomPanel;
 import Classes.Hexer;
 import Classes.Steganographer;
+import Classes.Tracker;
 
 import java.awt.CardLayout;
 import javax.swing.JButton;
@@ -23,6 +24,9 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JToggleButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class HexEditorPanel extends CustomPanel {
 	
@@ -30,19 +34,25 @@ public class HexEditorPanel extends CustomPanel {
 	private JTextField textInput;
 	private JTextField textFolderPath;
 	
-	private int bits_needed = 0;
-	private int bits_available = 0;
+	private boolean showAsSymbols = false;
 	private JTextField textIntSigned;
 	private JTextField textIntUnsigned;
 	private JTextField textBin;
 	private JTextField textHex;
 	private JTextField textAscii;
-	private static byte[] fileBytes;
+	private JButton btnApply;
+	JLabel lblConsole;
+	
+	private byte[] fileBytes;
+	private byte byteBeingEdited;
+	private String loadedFilePath;
+	
 
 	/**
 	 * Create the panel.
 	 */
 	public HexEditorPanel() {
+		Tracker.hexEditorPanel = this;
 		setLayout(null);
 		
 		JButton btnBack = new JButton("Back");
@@ -81,92 +91,232 @@ public class HexEditorPanel extends CustomPanel {
 		JButton btnLoad = new JButton("Load");
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {fileBytes = Hexer.getBinaryData("C:/Users/ermak/Documents/fileProgrammingTests/test.png");}
-				catch (IOException e1) {e1.printStackTrace();}
+				loadHexInfoPanel();
 			}
 		});
 		btnLoad.setBounds(470, 130, 80, 30);
 		add(btnLoad);
 		
 		JButton btnSave1 = new JButton("Save");
+		btnSave1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveFile(loadedFilePath);
+			}
+		});
 		btnSave1.setBounds(380, 130, 80, 30);
 		add(btnSave1);
 		
 		JButton btnSave2 = new JButton("Save As New File");
 		btnSave2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int formatPosition = 0; //where the format in the filename begins
+				for (int i = loadedFilePath.length() - 1; i >= 0; i--) {
+					if (loadedFilePath.charAt(i) == '.') {formatPosition = i; break;}
+				}
+				String newName = loadedFilePath.substring(0, formatPosition) + "_hexEdited" + loadedFilePath.substring(formatPosition);
+				saveFile(newName);
 			}
 		});
 		btnSave2.setBounds(380, 170, 170, 30);
 		add(btnSave2);
 		
 		textIntSigned = new JTextField();
-		textIntSigned.setToolTipText("Example.png");
+		textIntSigned.setEditable(false);
+		textIntSigned.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String t = textIntSigned.getText();
+				byte b = Hexer.getByteFromRepresentation(t, 0);
+				byteBeingEdited = b;
+			}
+		});
 		textIntSigned.setColumns(10);
-		textIntSigned.setBounds(380, 245, 80, 30);
+		textIntSigned.setBounds(380, 225, 80, 30);
 		add(textIntSigned);
 		
 		textIntUnsigned = new JTextField();
-		textIntUnsigned.setToolTipText("Example.png");
+		textIntUnsigned.setEditable(false);
+		textIntUnsigned.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String t = textIntUnsigned.getText();
+				byte b = Hexer.getByteFromRepresentation(t, 1);
+				byteBeingEdited = b;
+			}
+		});
 		textIntUnsigned.setColumns(10);
-		textIntUnsigned.setBounds(470, 245, 80, 30);
+		textIntUnsigned.setBounds(470, 225, 80, 30);
 		add(textIntUnsigned);
 		
 		textBin = new JTextField();
-		textBin.setToolTipText("Example.png");
+		textBin.setEditable(false);
+		textBin.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String t = textBin.getText();
+				byte b = Hexer.getByteFromRepresentation(t, 2);
+				byteBeingEdited = b;
+			}
+		});
 		textBin.setColumns(10);
-		textBin.setBounds(380, 285, 170, 30);
+		textBin.setBounds(380, 265, 170, 30);
 		add(textBin);
 		
 		textHex = new JTextField();
-		textHex.setToolTipText("Example.png");
+		textHex.setEditable(false);
+		textHex.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String t = textHex.getText();
+				byte b = Hexer.getByteFromRepresentation(t, 3);
+				byteBeingEdited = b;
+			}
+		});
 		textHex.setColumns(10);
-		textHex.setBounds(470, 326, 80, 30);
+		textHex.setBounds(470, 306, 80, 30);
 		add(textHex);
+		
+		textAscii = new JTextField();
+		textAscii.setEditable(false);
+		textAscii.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String t = textAscii.getText();
+				byte b = Hexer.getByteFromRepresentation(t, 4);
+				byteBeingEdited = b;
+			}
+		});
+		textAscii.setColumns(10);
+		textAscii.setBounds(380, 305, 80, 30);
+		add(textAscii);
 		
 		JLabel lblSigned = new JLabel("signed");
 		lblSigned.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSigned.setBounds(380, 230, 80, 15);
+		lblSigned.setBounds(380, 210, 80, 15);
 		add(lblSigned);
 		
 		JLabel lblUnsigned = new JLabel("unsigned");
 		lblUnsigned.setHorizontalAlignment(SwingConstants.CENTER);
-		lblUnsigned.setBounds(470, 230, 80, 15);
+		lblUnsigned.setBounds(470, 210, 80, 15);
 		add(lblUnsigned);
 		
 		JLabel lblBin = new JLabel("bin");
 		lblBin.setHorizontalAlignment(SwingConstants.LEFT);
-		lblBin.setBounds(555, 292, 20, 15);
+		lblBin.setBounds(555, 272, 20, 15);
 		add(lblBin);
 		
 		JLabel lblInt = new JLabel("int");
 		lblInt.setHorizontalAlignment(SwingConstants.LEFT);
-		lblInt.setBounds(555, 253, 20, 15);
+		lblInt.setBounds(555, 233, 20, 15);
 		add(lblInt);
 		
 		JLabel lblHex = new JLabel("hex");
 		lblHex.setHorizontalAlignment(SwingConstants.LEFT);
-		lblHex.setBounds(555, 334, 25, 15);
+		lblHex.setBounds(555, 314, 25, 15);
 		add(lblHex);
-		
-		textAscii = new JTextField();
-		textAscii.setToolTipText("Example.png");
-		textAscii.setColumns(10);
-		textAscii.setBounds(380, 325, 80, 30);
-		add(textAscii);
 		
 		JLabel lblAscii = new JLabel("ascii");
 		lblAscii.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblAscii.setBounds(325, 334, 50, 15);
+		lblAscii.setBounds(325, 314, 50, 15);
 		add(lblAscii);
+		
+		JCheckBox chckbxShowAsSymbols = new JCheckBox("Show As Symbols");
+		chckbxShowAsSymbols.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//byteBeingEdited = (Byte) null;
+				//Tracker.selectedByte = (Byte) null;
+				//Tracker.selectedBytePosition = (Integer) null;
+				
+				showAsSymbols = chckbxShowAsSymbols.isSelected();
+				Tracker.hexInfoPanel.clearPanel();
+				Tracker.hexInfoPanel.updPanel(fileBytes, showAsSymbols);
+				switchByteFieldsEditable(false);
+			}
+		});
+		chckbxShowAsSymbols.setHorizontalAlignment(SwingConstants.RIGHT);
+		chckbxShowAsSymbols.setBounds(194, 320, 125, 20);
+		add(chckbxShowAsSymbols);
+		
+		btnApply = new JButton("Ok");
+		btnApply.setEnabled(false);
+		btnApply.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updByteFields(byteBeingEdited);
+				fileBytes[Tracker.selectedBytePosition] = byteBeingEdited;
+				updHexInfoPanel();
+			}
+		});
+		btnApply.setBounds(490, 340, 60, 20);
+		add(btnApply);
+		
+		lblConsole = new JLabel("");
+		lblConsole.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		lblConsole.setVerticalAlignment(SwingConstants.BOTTOM);
+		lblConsole.setHorizontalAlignment(SwingConstants.LEFT);
+		lblConsole.setBounds(100, 325, 380, 30);
+		add(lblConsole);
 
 	}
 	
-	public static byte[] getFileBytes() {
-		return fileBytes;
+	private void loadHexInfoPanel() {
+		fileBytes = null;
+		try {
+			//fileBytes = Hexer.getBinaryData("C:/Users/ermak/Documents/fileProgrammingTests/test.png");
+			loadedFilePath = textFolderPath.getText() + "/" + textInput.getText();
+			fileBytes = Hexer.getBinaryData(loadedFilePath);
+			Tracker.hexInfoPanel.clearPanel();
+			Tracker.hexInfoPanel.updPanel(fileBytes, showAsSymbols);
+			lblConsole.setText("Loaded " + textInput.getText() + " Successfully");
+		}
+		catch (IOException e1) {e1.printStackTrace(); lblConsole.setText("Loading Failed");}
+	}
+	
+	private void saveFile(String name) {
+		try {
+			Hexer.createFile(name, fileBytes);
+			lblConsole.setText("Saved " + name + " Successfully");
+		}
+		catch (IOException e) {e.printStackTrace(); lblConsole.setText("Saving Failed");}
 	}
 	
 	private void updHexInfoPanel() {
-		//getParent().getAdditionalPanel().updPanel(fileBytes);
+		Tracker.hexInfoPanel.clearPanel();
+		Tracker.hexInfoPanel.updPanel(fileBytes, showAsSymbols);
+	}
+	
+	public void updByteFields(byte b) {
+		textIntSigned.setText(Hexer.getByteRepresentations(b)[0]);
+		textIntUnsigned.setText(Hexer.getByteRepresentations(b)[1]);
+		textBin.setText(Hexer.getByteRepresentations(b)[2]);
+		textHex.setText(Hexer.getByteRepresentations(b)[3]);
+		textAscii.setText(Hexer.getByteRepresentations(b)[4]);
+		switchByteFieldsEditable(true);
+		//if (showAsSymbols) {Tracker.currentBytePanel.setText(Hexer.getByteRepresentations(b)[4]);}
+		//else {Tracker.currentBytePanel.setText(Hexer.getByteRepresentations(b)[3]);}
+		
+	}
+	
+	private void switchByteFieldsEditable(boolean state) {
+		if (state) {
+			textIntSigned.setEditable(true);
+			textIntUnsigned.setEditable(true);
+			textBin.setEditable(true);
+			textAscii.setEditable(true);
+			textHex.setEditable(true);
+			btnApply.setEnabled(true);
+		}
+		else {
+			textIntSigned.setEditable(false);
+			textIntUnsigned.setEditable(false);
+			textBin.setEditable(false);
+			textAscii.setEditable(false);
+			textHex.setEditable(false);
+			btnApply.setEnabled(false);
+			textIntSigned.setText("");
+			textIntUnsigned.setText("");
+			textBin.setText("");
+			textAscii.setText("");
+			textHex.setText("");
+		}
 	}
  }

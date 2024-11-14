@@ -9,17 +9,24 @@ import javax.imageio.ImageIO;
 
 public class Steganographer {
 	
+	private static String formatPath(String path) {
+		path = path.replaceAll("\\\\", "/");
+		return path;
+	}
+	
 	private static String changeChar(String str, int pos, char c) {
 		return str.substring(0, pos) + c + str.substring(pos + 1);
 	}
 	
 	public static BufferedImage fileToImg(String path) {
+		path = formatPath(path);
 		try {return ImageIO.read(new File(path));}
 		catch (IOException e) {e.printStackTrace();}
 		return null;
 	}
 	
 	public static boolean imgToFile(BufferedImage img, String path, String format) {
+		path = formatPath(path);
 		try {ImageIO.write(img, format, new File(path)); return true;}
 		catch (IOException e) {e.printStackTrace(); return false;}
 	}
@@ -58,7 +65,7 @@ public class Steganographer {
 		if (b) {available_channels++;}
 		if (a) {available_channels++;}
 		available_bits *= available_channels;
-		int[] result = new int[] {bits_to_encode, available_bits};
+		int[] result = new int[] {bits_to_encode, available_bits - 8}; //-8 for length byte
 		return result;
 	}
 	
