@@ -12,11 +12,15 @@ import javax.imageio.ImageIO;
 public class MainConsole {
 	
 	/*
-	 asdasd
+	 * current problem: OK button only changes the label text, when it's clicked again the old value pops up
+	 * 
+	 hex needs to be HEAVILY optimized - parallelize? only update 1 label when can?
+	 hex progress bar = bytes in array / total size
 	*/
 	
 	public static void main(String[] args) throws IOException {
-		
+		String file = "C:\\Users\\ermak\\Documents\\fileProgrammingTests\\birb.png";
+		print(Hexer.getBinaryData(file));
 	}
 	
 	

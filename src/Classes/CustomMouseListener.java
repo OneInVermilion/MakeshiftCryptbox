@@ -10,26 +10,22 @@ import JPanels.HexEditorPanel;
 
 public class CustomMouseListener implements MouseListener {
 
-	private byte b;
 	private JLabel jp;
 	private int bpos;
 	
-	public CustomMouseListener (byte b, JLabel jp, int bpos) {
-		this.b = b;
+	public CustomMouseListener (JLabel jp, int bpos) {
 		this.jp = jp;
 		this.bpos = bpos;
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		Tracker.selectedByte = b;
 		Tracker.currentBytePanel = jp;
-		Tracker.hexEditorPanel.updByteFields(Tracker.selectedByte);
 		Tracker.selectedBytePosition = bpos;
+		Tracker.hexEditorPanel.updByteFields(Tracker.hexEditorPanel.fileBytes[bpos]);
 	}
 
-	@Override
-	public void mousePressed(MouseEvent e) {}
+
 
 	@Override
 	public void mouseReleased(MouseEvent e) {}
@@ -39,5 +35,11 @@ public class CustomMouseListener implements MouseListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

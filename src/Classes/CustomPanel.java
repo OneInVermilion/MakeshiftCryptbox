@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class CustomPanel extends JPanel {
@@ -18,6 +19,9 @@ public class CustomPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	JPanel me;
+	public ArrayList bytesList;
+
+	public byte[] fileBytes;
 	
 	public CustomPanel() {
 		me = this;
@@ -42,4 +46,6 @@ public class CustomPanel extends JPanel {
 	public void clearPanel() {}
 
 	public void updByteFields(byte selectedByte) {}
+
+	public void synchPanel(String[] s) {}
 }

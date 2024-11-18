@@ -34,7 +34,7 @@ public class HexInfoPanel extends CustomPanel {
 	GridBagLayout gridBagLayout = new GridBagLayout();
 	GridBagConstraints gbc = new GridBagConstraints();
 	int scale = 3;
-	public ArrayList bytesList = new ArrayList();
+	private ArrayList bytesList = new ArrayList();
 	
 	public HexInfoPanel() {
 		setBackground(new Color(255, 255, 255));
@@ -57,14 +57,13 @@ public class HexInfoPanel extends CustomPanel {
 		}
 	}
 	
-	public void updPanel(byte[] bytes, boolean showAsSymbols) {
+	//LINEAR IMPLEMENTATION - IMPOSSIBLY BAD LOAD TIMES FOR BIGGER IMAGES
+	/*public void updPanel(byte[] bytes, boolean showAsSymbols) {
 		int row_size = 16;
 		for (int i = 0; i < bytes.length; i++) {
-			//JLabel byte_here = new JLabel(Byte.toString(bytes[i]));
 			JLabel byte_here;
 			if (showAsSymbols) {byte_here = new JLabel(Hexer.getByteRepresentations(bytes[i])[4]);}
 			else {byte_here = new JLabel(Hexer.getByteRepresentations(bytes[i])[3]);}
-			//byte_here.addMouseListener(new CustomMouseListener() {mouseClicked(e, byte_here);}});
 			byte_here.addMouseListener(new CustomMouseListener(bytes[i], byte_here, i));
 			gbc.gridx = i % row_size;
 			gbc.gridy = i / row_size;
@@ -72,6 +71,29 @@ public class HexInfoPanel extends CustomPanel {
 			bytesList.add(byte_here);
 			revalidate();
 			repaint();
+		}
+	}*/
+	
+	//PARALLEL IMPLEMENTATION
+	public void updPanel(byte[] bytes, boolean showAsSymbols) {
+		int row_size = 16;
+		for (int i = 0; i < bytes.length; i++) {
+			JLabel byte_here;
+			if (showAsSymbols) {byte_here = new JLabel(Hexer.getByteRepresentations(bytes[i])[4]);}
+			else {byte_here = new JLabel(Hexer.getByteRepresentations(bytes[i])[3]);}
+			byte_here.addMouseListener(new CustomMouseListener(byte_here, i));
+			gbc.gridx = i % row_size;
+			gbc.gridy = i / row_size;
+			add(byte_here, gbc);
+			bytesList.add(byte_here);
+			revalidate();
+			repaint();
+		}
+	}
+	
+	public void synchPanel(String[] s) {
+		for (int i = 0; i < bytesList.size(); i++) {
+			((JLabel) bytesList.get(i)).setText(s[i]);
 		}
 	}
 	

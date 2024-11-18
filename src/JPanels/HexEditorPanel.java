@@ -9,6 +9,8 @@ import Classes.Steganographer;
 import Classes.Tracker;
 
 import java.awt.CardLayout;
+
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -43,7 +45,7 @@ public class HexEditorPanel extends CustomPanel {
 	private JButton btnApply;
 	JLabel lblConsole;
 	
-	private byte[] fileBytes;
+	//public byte[] fileBytes;
 	private byte byteBeingEdited;
 	private String loadedFilePath;
 	private JTextField textOutput;
@@ -92,7 +94,12 @@ public class HexEditorPanel extends CustomPanel {
 		JButton btnLoad = new JButton("Load");
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				loadHexInfoPanel();
+				try {
+					loadHexInfoPanel();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnLoad.setBounds(470, 170, 80, 30);
@@ -210,14 +217,9 @@ public class HexEditorPanel extends CustomPanel {
 		JCheckBox chckbxShowAsSymbols = new JCheckBox("Show As Symbols");
 		chckbxShowAsSymbols.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//byteBeingEdited = (Byte) null;
-				//Tracker.selectedByte = (Byte) null;
-				//Tracker.selectedBytePosition = (Integer) null;
-				
 				showAsSymbols = chckbxShowAsSymbols.isSelected();
-				Tracker.hexInfoPanel.clearPanel();
-				Tracker.hexInfoPanel.updPanel(fileBytes, showAsSymbols);
 				switchByteFieldsEditable(false);
+				switchViewType();
 			}
 		});
 		chckbxShowAsSymbols.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -230,7 +232,8 @@ public class HexEditorPanel extends CustomPanel {
 			public void actionPerformed(ActionEvent e) {
 				updByteFields(byteBeingEdited);
 				fileBytes[Tracker.selectedBytePosition] = byteBeingEdited;
-				updHexInfoPanel();
+				String val = showAsSymbols ? Hexer.getByteRepresentations(byteBeingEdited)[4] : Hexer.getByteRepresentations(byteBeingEdited)[3];
+				Tracker.currentBytePanel.setText(val);
 			}
 		});
 		btnApply.setBounds(490, 340, 60, 20);
@@ -256,17 +259,33 @@ public class HexEditorPanel extends CustomPanel {
 
 	}
 	
-	private void loadHexInfoPanel() {
+	/*private void loadHexInfoPanel() {
 		fileBytes = null;
 		try {
-			//fileBytes = Hexer.getBinaryData("C:/Users/ermak/Documents/fileProgrammingTests/test.png");
-			loadedFilePath = textFolderPath.getText() + "/" + textInput.getText();
-			fileBytes = Hexer.getBinaryData(loadedFilePath);
+			fileBytes = Hexer.getBinaryData("C:/Users/ermak/Documents/fileProgrammingTests/test.png");
+			//loadedFilePath = textFolderPath.getText() + "/" + textInput.getText();
+			//fileBytes = Hexer.getBinaryData(loadedFilePath);
 			Tracker.hexInfoPanel.clearPanel();
 			Tracker.hexInfoPanel.updPanel(fileBytes, showAsSymbols);
 			lblConsole.setText("Loaded " + textInput.getText() + " Successfully");
+			System.out.println(this);
+			System.out.println(Tracker.hexEditorPanel);
+			/*for (int i = 0; i < 10; i++) {
+				System.out.print(fileBytes[i] + " ");
+			}
 		}
 		catch (IOException e1) {e1.printStackTrace(); lblConsole.setText("Loading Failed");}
+	}*/
+	
+	private void loadHexInfoPanel() throws IOException {
+		fileBytes = Hexer.getBinaryData("C:/Users/ermak/Documents/fileProgrammingTests/birb.png");
+		//loadedFilePath = textFolderPath.getText() + "/" + textInput.getText();
+		//fileBytes = Hexer.getBinaryData(loadedFilePath);
+		Tracker.hexInfoPanel.clearPanel();
+		Tracker.hexInfoPanel.updPanel(fileBytes, showAsSymbols);
+		lblConsole.setText("Loaded " + textInput.getText() + " Successfully");
+		//for (int i = 0; i < 10; i++) {System.out.print(fileBytes[i] + " ");} System.out.println();
+		//for (int i = 0; i < 10; i++) {System.out.print(Tracker.hexEditorPanel.fileBytes[i] + " ");} System.out.println();
 	}
 	
 	private void saveFile(String name) {
@@ -289,9 +308,15 @@ public class HexEditorPanel extends CustomPanel {
 		textHex.setText(Hexer.getByteRepresentations(b)[3]);
 		textAscii.setText(Hexer.getByteRepresentations(b)[4]);
 		switchByteFieldsEditable(true);
-		//if (showAsSymbols) {Tracker.currentBytePanel.setText(Hexer.getByteRepresentations(b)[4]);}
-		//else {Tracker.currentBytePanel.setText(Hexer.getByteRepresentations(b)[3]);}
-		
+	}
+	
+	public void switchViewType() {
+		String[] s = new String[fileBytes.length];
+		for (int i = 0; i < fileBytes.length; i++) {
+			int id = showAsSymbols ? 4 : 3;
+			s[i] = Hexer.getByteRepresentations(fileBytes[i])[id];
+		}
+		Tracker.hexInfoPanel.synchPanel(s);
 	}
 	
 	private void switchByteFieldsEditable(boolean state) {
