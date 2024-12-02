@@ -1,32 +1,24 @@
 package JPanels;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import Classes.CustomMouseListener;
 import Classes.CustomPanel;
 import Classes.Hexer;
 import Classes.Tracker;
+import Classes.byteLoaderThread;
 
-import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
 
 import java.awt.GridBagLayout;
 
-public class HexInfoPanel extends CustomPanel {
+public class HexInfoPanel extends CustomPanel implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -34,7 +26,7 @@ public class HexInfoPanel extends CustomPanel {
 	GridBagLayout gridBagLayout = new GridBagLayout();
 	GridBagConstraints gbc = new GridBagConstraints();
 	int scale = 3;
-	private ArrayList bytesList = new ArrayList();
+	JLabel byte_here;
 	
 	public HexInfoPanel() {
 		setBackground(new Color(255, 255, 255));
@@ -50,10 +42,12 @@ public class HexInfoPanel extends CustomPanel {
 	}
 	
 	public void clearPanel() {
-		for (int i = 0; i < bytesList.size(); i++) {
-			remove((JLabel) bytesList.get(i));
-			revalidate();
-			repaint();
+		if (bytesList != null) {
+			for (int i = 0; i < bytesList.length; i++) {
+				remove((JLabel) bytesList[i]);
+				revalidate();
+				repaint();
+			}
 		}
 	}
 	
@@ -61,7 +55,7 @@ public class HexInfoPanel extends CustomPanel {
 	/*public void updPanel(byte[] bytes, boolean showAsSymbols) {
 		int row_size = 16;
 		for (int i = 0; i < bytes.length; i++) {
-			JLabel byte_here;
+			JLabel byte_here; //IS DEFINED IN THE BEGINNING OF CLASS FOR PARALLEL SECTION
 			if (showAsSymbols) {byte_here = new JLabel(Hexer.getByteRepresentations(bytes[i])[4]);}
 			else {byte_here = new JLabel(Hexer.getByteRepresentations(bytes[i])[3]);}
 			byte_here.addMouseListener(new CustomMouseListener(bytes[i], byte_here, i));
@@ -69,31 +63,45 @@ public class HexInfoPanel extends CustomPanel {
 			gbc.gridy = i / row_size;
 			add(byte_here, gbc);
 			bytesList.add(byte_here);
-			revalidate();
-			repaint();
 		}
+		revalidate();
+		repaint();
 	}*/
 	
 	//PARALLEL IMPLEMENTATION
 	public void updPanel(byte[] bytes, boolean showAsSymbols) {
+		int num_threads = 4;
+		bytesList = new JLabel[bytes.length];
+		byteLoaderThread[] threads = new byteLoaderThread[num_threads];
+		for (int i = 0; i < num_threads; i++) {
+			byteLoaderThread thr = new byteLoaderThread(this, bytes, showAsSymbols, i, num_threads);
+			threads[i] = thr;
+		}
+		for (int i = 0; i < threads.length; i++) {
+			threads[i].start();
+		}
+		
+		for (int i = 0; i < threads.length; i++) {
+			while (threads[i].isAlive()) {}
+		}
+		
 		int row_size = 16;
-		for (int i = 0; i < bytes.length; i++) {
-			JLabel byte_here;
-			if (showAsSymbols) {byte_here = new JLabel(Hexer.getByteRepresentations(bytes[i])[4]);}
-			else {byte_here = new JLabel(Hexer.getByteRepresentations(bytes[i])[3]);}
-			byte_here.addMouseListener(new CustomMouseListener(byte_here, i));
+		for (int i = 0; i < bytesList.length; i++) {
 			gbc.gridx = i % row_size;
 			gbc.gridy = i / row_size;
-			add(byte_here, gbc);
-			bytesList.add(byte_here);
-			revalidate();
-			repaint();
+			add(bytesList[i], gbc);
 		}
+		revalidate();
+		repaint();
+	}
+	
+	public void run() {
+		
 	}
 	
 	public void synchPanel(String[] s) {
-		for (int i = 0; i < bytesList.size(); i++) {
-			((JLabel) bytesList.get(i)).setText(s[i]);
+		for (int i = 0; i < bytesList.length; i++) {
+			((JLabel) bytesList[i]).setText(s[i]);
 		}
 	}
 	
@@ -107,7 +115,7 @@ public class HexInfoPanel extends CustomPanel {
 			gbc.gridx = i % row_size;
 			gbc.gridy = i / row_size;
 			add(byte_here, gbc);
-			bytesList.add(byte_here);
+			bytesList[i] = byte_here;
 			revalidate();
 			repaint();
 		}

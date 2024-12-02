@@ -9,6 +9,7 @@ import JFrames.MainFrame;
 import java.awt.CardLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class CustomPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	JPanel me;
-	public ArrayList bytesList;
+	public JLabel[] bytesList;
 
 	public byte[] fileBytes;
 	

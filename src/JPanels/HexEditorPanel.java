@@ -29,6 +29,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JToggleButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JProgressBar;
 
 public class HexEditorPanel extends CustomPanel {
 	
@@ -46,6 +47,7 @@ public class HexEditorPanel extends CustomPanel {
 	JLabel lblConsole;
 	
 	//public byte[] fileBytes;
+	
 	private byte byteBeingEdited;
 	private String loadedFilePath;
 	private JTextField textOutput;
@@ -95,6 +97,7 @@ public class HexEditorPanel extends CustomPanel {
 		btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					switchByteFieldsEditable(false);
 					loadHexInfoPanel();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -256,7 +259,6 @@ public class HexEditorPanel extends CustomPanel {
 		lblOutputPath.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblOutputPath.setBounds(450, 117, 100, 13);
 		add(lblOutputPath);
-
 	}
 	
 	/*private void loadHexInfoPanel() {
@@ -278,9 +280,9 @@ public class HexEditorPanel extends CustomPanel {
 	}*/
 	
 	private void loadHexInfoPanel() throws IOException {
-		fileBytes = Hexer.getBinaryData("C:/Users/ermak/Documents/fileProgrammingTests/birb.png");
-		//loadedFilePath = textFolderPath.getText() + "/" + textInput.getText();
-		//fileBytes = Hexer.getBinaryData(loadedFilePath);
+		//fileBytes = Hexer.getBinaryData("C:/Users/ermak/Documents/fileProgrammingTests/bs.png");
+		loadedFilePath = textFolderPath.getText() + "/" + textInput.getText();
+		fileBytes = Hexer.getBinaryData(loadedFilePath);
 		Tracker.hexInfoPanel.clearPanel();
 		Tracker.hexInfoPanel.updPanel(fileBytes, showAsSymbols);
 		lblConsole.setText("Loaded " + textInput.getText() + " Successfully");
