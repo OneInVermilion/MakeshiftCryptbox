@@ -20,7 +20,7 @@ public class MainConsole {
 	
 	public static void main(String[] args) throws IOException {
 		String file = "C:\\Users\\ermak\\Documents\\fileProgrammingTests\\birb.png";
-		print(Hexer.getBinaryData(file));
+		Metadater.printData(file);
 	}
 	
 	

@@ -6,7 +6,7 @@ import Classes.CustomMouseListener;
 import Classes.CustomPanel;
 import Classes.Hexer;
 import Classes.Tracker;
-import Classes.byteLoaderThread;
+import Classes.ByteLoaderThread;
 
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -72,9 +72,9 @@ public class HexInfoPanel extends CustomPanel implements Runnable {
 	public void updPanel(byte[] bytes, boolean showAsSymbols) {
 		int num_threads = 4;
 		bytesList = new JLabel[bytes.length];
-		byteLoaderThread[] threads = new byteLoaderThread[num_threads];
+		ByteLoaderThread[] threads = new ByteLoaderThread[num_threads];
 		for (int i = 0; i < num_threads; i++) {
-			byteLoaderThread thr = new byteLoaderThread(this, bytes, showAsSymbols, i, num_threads);
+			ByteLoaderThread thr = new ByteLoaderThread(this, bytes, showAsSymbols, i, num_threads);
 			threads[i] = thr;
 		}
 		for (int i = 0; i < threads.length; i++) {

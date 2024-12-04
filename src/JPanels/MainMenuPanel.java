@@ -43,7 +43,7 @@ public class MainMenuPanel extends CustomPanel {
 		JButton btnMetadata = new JButton("Metadata");
 		btnMetadata.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//requestSwitchPanel(new HexEditorPanel());
+				requestSwitchPanel(new MetadataPanel());
 			}
 		});
 		btnMetadata.setBounds(170, 172, 120, 60);
