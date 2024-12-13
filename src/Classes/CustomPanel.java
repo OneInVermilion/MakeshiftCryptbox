@@ -43,10 +43,14 @@ public class CustomPanel extends JPanel {
 		parent.addPanel(pan2);
 	}
 	public void updPanel(byte[] bytes, boolean showAsSymbols) {}
+	
+	public void updPanel(byte[] bytes) {}
 
 	public void clearPanel() {}
 
 	public void updByteFields(byte selectedByte) {}
 
 	public void synchPanel(String[] s) {}
+	
+	public void changeByteInInfoString(String hex, int location) {}
 }

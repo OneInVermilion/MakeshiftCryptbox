@@ -56,9 +56,10 @@ public class MainFrame extends JFrame {
 		panel.revalidate();
 	}
 	public void addPanel(JScrollPane pan) {
-		pan.setBounds(20, 70, 355, 245);
+		pan.setBounds(20, 70, 355, 235);
 		getContentPane().add(pan);
 		pan.revalidate();
+		pan.repaint();
 	}
 
 }

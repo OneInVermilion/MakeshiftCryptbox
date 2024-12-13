@@ -31,32 +31,33 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JProgressBar;
 
-public class HexEditorPanel extends CustomPanel {
+public class HexEditorPanel2 extends CustomPanel {
 	
 	private static final long serialVersionUID = 1L;
 	private JTextField textInput;
 	private JTextField textFolderPath;
 	
-	private boolean showAsSymbols = false;
 	private JTextField textIntSigned;
 	private JTextField textIntUnsigned;
 	private JTextField textBin;
 	private JTextField textHex;
 	private JTextField textAscii;
-	private JButton btnApply;
 	JLabel lblConsole;
+	JLabel lblOutputPath;
 	
-	//public byte[] fileBytes;
+	private JLabel lblLoadText;
+	private JCheckBox chckbxLoadTextInfo;
+	private boolean useViewer;
 	
-	private byte byteBeingEdited;
 	private String loadedFilePath;
 	private JTextField textOutput;
+	private JTextField textLocation;
 	
 
 	/**
 	 * Create the panel.
 	 */
-	public HexEditorPanel() {
+	public HexEditorPanel2() {
 		Tracker.hexEditorPanel = this;
 		setLayout(null);
 		
@@ -85,7 +86,7 @@ public class HexEditorPanel extends CustomPanel {
 		textFolderPath = new JTextField();
 		textFolderPath.setToolTipText("C:/Users/Example/Documents");
 		textFolderPath.setColumns(10);
-		textFolderPath.setBounds(30, 30, 520, 30);
+		textFolderPath.setBounds(20, 30, 530, 30);
 		add(textFolderPath);
 		
 		JLabel lblFolderPath = new JLabel("Folder Path");
@@ -121,10 +122,12 @@ public class HexEditorPanel extends CustomPanel {
 		textIntSigned.setEditable(false);
 		textIntSigned.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e) {
-				String t = textIntSigned.getText();
-				byte b = Hexer.getByteFromRepresentation(t, 0);
-				byteBeingEdited = b;
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					String t = textIntSigned.getText();
+					byte b = Hexer.getByteFromRepresentation(t, 0);
+					applyByteChange(Integer.parseInt(textLocation.getText(), 16), b);
+				}
 			}
 		});
 		textIntSigned.setColumns(10);
@@ -135,10 +138,12 @@ public class HexEditorPanel extends CustomPanel {
 		textIntUnsigned.setEditable(false);
 		textIntUnsigned.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e) {
-				String t = textIntUnsigned.getText();
-				byte b = Hexer.getByteFromRepresentation(t, 1);
-				byteBeingEdited = b;
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					String t = textIntUnsigned.getText();
+					byte b = Hexer.getByteFromRepresentation(t, 1);
+					applyByteChange(Integer.parseInt(textLocation.getText(), 16), b);
+				}
 			}
 		});
 		textIntUnsigned.setColumns(10);
@@ -149,10 +154,12 @@ public class HexEditorPanel extends CustomPanel {
 		textBin.setEditable(false);
 		textBin.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e) {
-				String t = textBin.getText();
-				byte b = Hexer.getByteFromRepresentation(t, 2);
-				byteBeingEdited = b;
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					String t = textBin.getText();
+					byte b = Hexer.getByteFromRepresentation(t, 2);
+					applyByteChange(Integer.parseInt(textLocation.getText(), 16), b);
+				}
 			}
 		});
 		textBin.setColumns(10);
@@ -163,10 +170,12 @@ public class HexEditorPanel extends CustomPanel {
 		textHex.setEditable(false);
 		textHex.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e) {
-				String t = textHex.getText();
-				byte b = Hexer.getByteFromRepresentation(t, 3);
-				byteBeingEdited = b;
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					String t = textHex.getText();
+					byte b = Hexer.getByteFromRepresentation(t, 3);
+					applyByteChange(Integer.parseInt(textLocation.getText(), 16), b);
+				}
 			}
 		});
 		textHex.setColumns(10);
@@ -177,10 +186,12 @@ public class HexEditorPanel extends CustomPanel {
 		textAscii.setEditable(false);
 		textAscii.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e) {
-				String t = textAscii.getText();
-				byte b = Hexer.getByteFromRepresentation(t, 4);
-				byteBeingEdited = b;
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					String t = textAscii.getText();
+					byte b = Hexer.getByteFromRepresentation(t, 4);
+					applyByteChange(Integer.parseInt(textLocation.getText(), 16), b);
+				}
 			}
 		});
 		textAscii.setColumns(10);
@@ -217,36 +228,11 @@ public class HexEditorPanel extends CustomPanel {
 		lblAscii.setBounds(325, 314, 50, 15);
 		add(lblAscii);
 		
-		JCheckBox chckbxShowAsSymbols = new JCheckBox("Show As Symbols");
-		chckbxShowAsSymbols.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showAsSymbols = chckbxShowAsSymbols.isSelected();
-				switchByteFieldsEditable(false);
-				switchViewType();
-			}
-		});
-		chckbxShowAsSymbols.setHorizontalAlignment(SwingConstants.RIGHT);
-		chckbxShowAsSymbols.setBounds(194, 320, 125, 20);
-		add(chckbxShowAsSymbols);
-		
-		btnApply = new JButton("Ok");
-		btnApply.setEnabled(false);
-		btnApply.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updByteFields(byteBeingEdited);
-				fileBytes[Tracker.selectedBytePosition] = byteBeingEdited;
-				String val = showAsSymbols ? Hexer.getByteRepresentations(byteBeingEdited)[4] : Hexer.getByteRepresentations(byteBeingEdited)[3];
-				Tracker.currentBytePanel.setText(val);
-			}
-		});
-		btnApply.setBounds(490, 340, 60, 20);
-		add(btnApply);
-		
 		lblConsole = new JLabel("");
 		lblConsole.setFont(new Font("Tahoma", Font.PLAIN, 8));
 		lblConsole.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblConsole.setHorizontalAlignment(SwingConstants.LEFT);
-		lblConsole.setBounds(100, 325, 380, 30);
+		lblConsole.setBounds(100, 335, 380, 20);
 		add(lblConsole);
 		
 		textOutput = new JTextField();
@@ -255,21 +241,104 @@ public class HexEditorPanel extends CustomPanel {
 		textOutput.setBounds(380, 130, 170, 30);
 		add(textOutput);
 		
-		JLabel lblOutputPath = new JLabel("Output File Name");
+		lblOutputPath = new JLabel("Output File Name");
 		lblOutputPath.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblOutputPath.setBounds(450, 117, 100, 13);
 		add(lblOutputPath);
+		
+		textLocation = new JTextField();
+		textLocation.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					changeTextLocation(0);
+					//Tracker.hexInfoPanel.findByteInInfoString(Integer.parseInt(textLocation.getText()));
+				}
+			}
+		});
+		textLocation.setText("0");
+		textLocation.setColumns(10);
+		textLocation.setBounds(185, 305, 80, 30);
+		add(textLocation);
+		
+		JButton btnLocLeft = new JButton("<");
+		btnLocLeft.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				changeTextLocation(-1);
+			}
+		});
+		btnLocLeft.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnLocLeft.setBounds(135, 305, 50, 30);
+		add(btnLocLeft);
+		
+		JButton btnLocRight = new JButton(">");
+		btnLocRight.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				changeTextLocation(1);
+			}
+		});
+		btnLocRight.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnLocRight.setBounds(265, 305, 50, 30);
+		add(btnLocRight);
+		
+		chckbxLoadTextInfo = new JCheckBox("");
+		chckbxLoadTextInfo.setSelected(true);
+		chckbxLoadTextInfo.setBounds(555, 175, 20, 20);
+		add(chckbxLoadTextInfo);
+		
+		lblLoadText = new JLabel("<html>"
+                + "Load" + "<br>"
+                + "In" + "<br>"
+                + "Byte" + "<br>"
+                + "Viewer" + "<br>"
+                + "</html>");
+		lblLoadText.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		lblLoadText.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLoadText.setBounds(550, 130, 35, 43);
+		add(lblLoadText);
+	}
+	
+	//chanes the text representation of byte location
+	//aka + or - the amount from integer number, represented as a string
+	private void changeTextLocation(int amount) {
+		try {
+			String loc = textLocation.getText();
+			int locInt = Integer.parseInt(loc, 16);
+			textLocation.setText(Integer.toString(locInt + amount, 16));
+			updByteFields(fileBytes[locInt + amount]);
+		}
+		catch (Exception e1) {
+			lblConsole.setText("Byte Location Does Not Exist");
+			switchByteFieldsEditable(false);
+		}
+		
+	}
+	
+	private void applyByteChange(int location, byte val) {
+		try {
+			fileBytes[location] = val;
+			String hexVal = Hexer.getByteRepresentations(val)[3];
+			if (useViewer) {Tracker.hexInfoPanel.changeByteInInfoString(hexVal, location);}
+			lblConsole.setText("Changed Byte Successfully");
+		}
+		catch (Exception e1) {
+			lblConsole.setText("Incorrect Byte Value");
+		}
+		textIntSigned.setText(Hexer.getByteRepresentations(val)[0]);
+		textIntUnsigned.setText(Hexer.getByteRepresentations(val)[1]);
+		textBin.setText(Hexer.getByteRepresentations(val)[2]);
+		textHex.setText(Hexer.getByteRepresentations(val)[3]);
+		textAscii.setText(Hexer.getByteRepresentations(val)[4]);
 	}
 	
 	private void loadHexInfoPanel() throws IOException {
+		useViewer = chckbxLoadTextInfo.isSelected();
 		//fileBytes = Hexer.getBinaryData("C:/Users/ermak/Documents/fileProgrammingTests/bs.png");
 		loadedFilePath = textFolderPath.getText() + "/" + textInput.getText();
 		fileBytes = Hexer.getBinaryData(loadedFilePath);
 		Tracker.hexInfoPanel.clearPanel();
-		Tracker.hexInfoPanel.updPanel(fileBytes, showAsSymbols);
-		lblConsole.setText("Loaded " + textInput.getText() + " Successfully");
-		//for (int i = 0; i < 10; i++) {System.out.print(fileBytes[i] + " ");} System.out.println();
-		//for (int i = 0; i < 10; i++) {System.out.print(Tracker.hexEditorPanel.fileBytes[i] + " ");} System.out.println();
+		if (useViewer) {Tracker.hexInfoPanel.updPanel(fileBytes);}
+		lblConsole.setText("Loaded " + textInput.getText() + " Successfully. Last Byte: " + Integer.toHexString(fileBytes.length - 1));
 	}
 	
 	private void saveFile(String name) {
@@ -289,15 +358,6 @@ public class HexEditorPanel extends CustomPanel {
 		switchByteFieldsEditable(true);
 	}
 	
-	public void switchViewType() {
-		String[] s = new String[fileBytes.length];
-		for (int i = 0; i < fileBytes.length; i++) {
-			int id = showAsSymbols ? 4 : 3;
-			s[i] = Hexer.getByteRepresentations(fileBytes[i])[id];
-		}
-		Tracker.hexInfoPanel.synchPanel(s);
-	}
-	
 	private void switchByteFieldsEditable(boolean state) {
 		if (state) {
 			textIntSigned.setEditable(true);
@@ -305,7 +365,6 @@ public class HexEditorPanel extends CustomPanel {
 			textBin.setEditable(true);
 			textAscii.setEditable(true);
 			textHex.setEditable(true);
-			btnApply.setEnabled(true);
 		}
 		else {
 			textIntSigned.setEditable(false);
@@ -313,7 +372,6 @@ public class HexEditorPanel extends CustomPanel {
 			textBin.setEditable(false);
 			textAscii.setEditable(false);
 			textHex.setEditable(false);
-			btnApply.setEnabled(false);
 			textIntSigned.setText("");
 			textIntUnsigned.setText("");
 			textBin.setText("");

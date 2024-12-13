@@ -76,4 +76,12 @@ public class Hexer {
 		return 0;
 	}
 	
+	public static int findNthChar(String s, char c, int num) {
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == c) {num--;}
+			if (num == 0) {return i;}
+		}
+		return -1;
+	}
+	
 }

@@ -254,7 +254,7 @@ public class MetadataPanel extends CustomPanel {
 		btnSave.setBounds(210, 325, 70, 30);
 		add(btnSave);
 		
-		lblConsole = new JLabel("Console");
+		lblConsole = new JLabel("Hold Cursor Over Fields To Gain Information");
 		lblConsole.setFont(new Font("Tahoma", Font.PLAIN, 8));
 		lblConsole.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblConsole.setHorizontalAlignment(SwingConstants.LEFT);

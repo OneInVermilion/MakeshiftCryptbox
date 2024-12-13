@@ -158,7 +158,7 @@ public class CiphersPanel extends CustomPanel {
                 + "Enter key of equal length to input" + "<br>"
                 + "Letters are shifted based on key's letters" + "<br>"
                 + "Key \'abz\': 1st letter shifted 1, 2nd letter shifted 2, 3rd letter shifted 26" + "<br>"
-                + "Upper/Lower case doens't matter"
+                + "Upper/Lower case doesn't matter"
                 + "</html>");
 		btnVigenere.setBounds(10, 130, 110, 30);
 		add(btnVigenere);
@@ -194,7 +194,7 @@ public class CiphersPanel extends CustomPanel {
                 + "Enter 26 non-repeating letters" + "<br>"
                 + "A swapped with 1st letter, B swapped with 2nd letter, etc" + "<br>"
                 + "Key \'zyx...cba\' is Atbash" + "<br>"
-                + "Upper/Lower case doens't matter"
+                + "Upper/Lower case doesn't matter"
                 + "</html>");
 		btnCustomMap.setBounds(10, 170, 110, 30);
 		add(btnCustomMap);

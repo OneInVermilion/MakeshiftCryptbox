@@ -52,7 +52,7 @@ public class MainMenuPanel extends CustomPanel {
 		JButton btnHexEditor = new JButton("Hex Editor");
 		btnHexEditor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				requestSwitchPanel(new HexEditorPanel(), new HexInfoPanel().scroll);
+				requestSwitchPanel(new HexEditorPanel2(), new HexInfoPanel2().scroll);
 			}
 		});
 		btnHexEditor.setBounds(290, 172, 120, 60);

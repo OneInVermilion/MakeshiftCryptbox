@@ -19,8 +19,9 @@ public class MainConsole {
 	*/
 	
 	public static void main(String[] args) throws IOException {
-		String file = "C:\\Users\\ermak\\Documents\\fileProgrammingTests\\birb.png";
-		Metadater.printData(file);
+		//String file = "C:\\Users\\ermak\\Documents\\fileProgrammingTests\\birb.png";
+		//Metadater.printData(file);
+		print(Hexer.findNthChar("abc def  ghi", ' ', 4));
 	}
 	
 	
